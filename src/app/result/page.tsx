@@ -8,19 +8,25 @@ const MainMap = dynamic(() => import("@/components/main-map"), { ssr: false });
 type Result = Awaited<ReturnType<typeof getRoutes>>[number];
 
 export default async function SearchResults({
-  searchParams: { location, id },
+  searchParams: { location, currentLng, currentLat, id },
 }: {
-  searchParams: { location?: string; id?: string };
+  searchParams: {
+    location?: string;
+    currentLng?: string;
+    currentLat?: string;
+    id?: string;
+  };
 }) {
-  if (!location || !id) {
+  if (!location || !id || !currentLng || !currentLat) {
     return null;
   }
 
-  const results = await getRoutes("TODO", location);
+  const results = await getRoutes(`${currentLat},${currentLng}`, location);
   const highestScore = Math.max(
     ...results.map((result) => result.accessibilityScore),
   );
-  const result = results?.length && results.find((result) => result.id === id)!;
+  // const result = results?.length && results.find((result) => result.id === id)!;
+  const result = results?.length && results[0]!;
 
   if (!result) {
     return null;
@@ -48,7 +54,7 @@ export default async function SearchResults({
             {result?.timeMinutes} minutes
           </span>
           <span className="text-muted-foreground">
-            {result?.wheelChairAccessible && (
+            {result?.wheelchairAccessible && (
               <AccessibilityIcon className="h-4 w-4" />
             )}
           </span>
@@ -56,17 +62,9 @@ export default async function SearchResults({
       </div>
 
       <MainMap
-        startLocation={result?.legs?.at(0)!.start_location}
-        endLocation={result?.legs?.at(-1)!.end_location}
-        paths={result?.legs?.flatMap((leg) =>
-          leg.steps.map(
-            (step) =>
-              [step.start_location.lng, step.start_location.lat] as [
-                number,
-                number,
-              ],
-          ),
-        )}
+        startLocation={result.polyline?.at(0)!.at(0)!}
+        endLocation={result?.polyline?.at(-1)!.at(-1)!}
+        polyline={result?.polyline}
       />
     </main>
   );

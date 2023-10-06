@@ -10,6 +10,12 @@ import { Button } from "./ui/button";
 import { ArrowLeftIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 
+function getPosition(options?: PositionOptions): Promise<GeolocationPosition> {
+  return new Promise((resolve, reject) =>
+    navigator.geolocation.getCurrentPosition(resolve, reject, options),
+  );
+}
+
 const formSchema = z.object({
   location: z.string().min(2, {
     message: "Location must be at least 2 characters long",
@@ -33,10 +39,15 @@ const Search = ({
 
   const router = useRouter();
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
 
-    router.push(`/search?location=${values.location}`);
+    const position = await getPosition();
+    const { latitude, longitude } = position.coords;
+
+    router.push(
+      `/search?currentLng=${longitude}&currentLat=${latitude}&location=${values.location}`,
+    );
   };
 
   return (

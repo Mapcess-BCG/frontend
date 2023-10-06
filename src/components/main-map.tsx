@@ -12,6 +12,8 @@ import { IconLayer, PathLayer } from "@deck.gl/layers/typed";
 
 import "mapbox-gl/dist/mapbox-gl.css";
 import { cn } from "@/lib/utils";
+import { Polyline } from "@/api/routeService";
+import { randomUUID } from "crypto";
 
 const ICON_MAPPING = {
   marker: { x: 0, y: 0, width: 128, height: 128, mask: true },
@@ -26,40 +28,42 @@ const DeckGLOverlay = (props: MapboxOverlayProps) => {
 const MainMap = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & {
-    paths?: [number, number][];
-    startLocation?: {
-      lat: number;
-      lng: number;
-    };
-    endLocation?: {
-      lat: number;
-      lng: number;
-    };
+    polyline?: Polyline;
+    startLocation?: [number, number];
+    endLocation?: [number, number];
   }
->(({ startLocation, endLocation, paths, className, ...props }, ref) => {
+>(({ startLocation, endLocation, polyline, className, ...props }, ref) => {
   const { resolvedTheme } = useTheme();
 
-  const pathLayer = new PathLayer({
-    id: "path-layer",
-    data: [{ path: paths, name: "path", color: [255, 0, 0] }],
-    pickable: true,
-    widthScale: 20,
-    widthMinPixels: 2,
-    getPath: (d) => d.path,
-    getColor: (d) => d.color,
-    getWidth: (d) => 5,
-  });
+  const pathLayers = polyline?.map(
+    (segment) =>
+      new PathLayer({
+        id: segment.map((coord) => coord.toReversed()).join(","),
+        data: [
+          {
+            path: segment.map((coord) => coord.toReversed()),
+            name: "path",
+            color: [255, 0, 0],
+          },
+        ],
+        pickable: true,
+        widthScale: 5,
+        widthMinPixels: 1,
+        getPath: (d) => d.path,
+        getColor: (d) => d.color,
+        getWidth: (d) => 2,
+      }),
+  );
 
   const iconLayer = new IconLayer({
-    id: "icon-layer",
     data: [
       {
         name: "start",
-        coordinates: [startLocation?.lng, startLocation?.lat],
+        coordinates: startLocation?.toReversed(),
       },
       {
         name: "end",
-        coordinates: [endLocation?.lng, endLocation?.lat],
+        coordinates: endLocation?.toReversed(),
       },
     ],
     pickable: true,
@@ -73,7 +77,7 @@ const MainMap = React.forwardRef<
     getColor: (d) => [Math.sqrt(d.exits), 140, 0],
   });
 
-  const layers = [pathLayer, iconLayer];
+  const layers = pathLayers ? [...pathLayers, iconLayer] : [iconLayer];
 
   return (
     <div
@@ -85,9 +89,9 @@ const MainMap = React.forwardRef<
         reuseMaps={true}
         attributionControl={false}
         initialViewState={{
-          latitude: startLocation ? startLocation.lat : 51.233334,
-          longitude: startLocation ? startLocation.lng : 6.783333,
-          zoom: 10,
+          longitude: startLocation ? startLocation[1] : 6.783333,
+          latitude: startLocation ? startLocation[0] : 51.233334,
+          zoom: 14,
         }}
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
         mapStyle={
