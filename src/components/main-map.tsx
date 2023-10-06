@@ -43,7 +43,7 @@ const MainMap = React.forwardRef<
           {
             path: segment.map((coord) => coord.toReversed()),
             name: "path",
-            color: [255, 0, 0],
+            color: [20, 20, 200],
           },
         ],
         pickable: true,
@@ -58,15 +58,10 @@ const MainMap = React.forwardRef<
   const iconLayer = new IconLayer({
     data: [
       {
-        name: "start",
-        coordinates: startLocation?.toReversed(),
-      },
-      {
         name: "end",
         coordinates: endLocation?.toReversed(),
       },
     ],
-    pickable: true,
     iconAtlas:
       "https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.png",
     iconMapping: ICON_MAPPING,
@@ -74,7 +69,7 @@ const MainMap = React.forwardRef<
     sizeScale: 15,
     getPosition: (d) => d.coordinates,
     getSize: (d) => 5,
-    getColor: (d) => [Math.sqrt(d.exits), 140, 0],
+    getColor: (d) => [200, 20, 20],
   });
 
   const layers = pathLayers ? [...pathLayers, iconLayer] : [iconLayer];
