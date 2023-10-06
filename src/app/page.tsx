@@ -1,3 +1,4 @@
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
@@ -108,7 +109,7 @@ export default function Home() {
             Instantly deploy your Next.js site to a shareable URL with Vercel.
           </p>
         </a>
-
+        <ModeToggle />
         <Button>Hello Shadcn</Button>
       </div>
     </main>
