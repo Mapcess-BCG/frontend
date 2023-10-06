@@ -13,7 +13,6 @@ import { IconLayer, PathLayer } from "@deck.gl/layers/typed";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { cn } from "@/lib/utils";
 import { Polyline } from "@/api/routeService";
-import { randomUUID } from "crypto";
 
 const ICON_MAPPING = {
   marker: { x: 0, y: 0, width: 128, height: 128, mask: true },

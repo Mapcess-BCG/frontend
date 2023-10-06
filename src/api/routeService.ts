@@ -18,18 +18,19 @@ export const getRoutes = async (from: string, to: string) => {
   const url = encodeURI(`${API_URL}?origin=${from}&destination=${to}`);
   const response = await fetch(url);
 
-  console.log(url);
   const data = await response.json();
-  console.log(data);
 
   const result = routeSchema.parse(data);
-  console.log(result);
 
-  return result.map((route) => ({
-    ...route,
-    accessibilityScore: 2.5,
-    id: randomUUID(),
-    timeMinutes: 10,
-    wheelchairAccessible: true,
-  }));
+  return result.map((route) => {
+    const random = Math.random();
+
+    return {
+      ...route,
+      accessibilityScore: (random * 5).toFixed(2),
+      id: randomUUID(),
+      timeMinutes: (0.1 * route.polyline.flat().length).toFixed(2),
+      wheelchairAccessible: random > 0.3,
+    };
+  });
 };
