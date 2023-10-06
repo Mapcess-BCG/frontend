@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import { IconLayer, PathLayer } from "@deck.gl/layers/typed";
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import "./mapbox.css";
 import { cn } from "@/lib/utils";
 import { Polyline } from "@/api/routeService";
 

@@ -1,0 +1,4 @@
+.dark .mapboxgl-ctrl,
+.dark .mapboxgl-ctrl-group {
+  filter: invert(1) !important;
+}
