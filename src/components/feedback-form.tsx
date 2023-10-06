@@ -16,18 +16,11 @@ const formSchema = z.object({
   }),
 });
 
-const Search = ({
-  location,
-  backButton,
-  ...props
-}: React.ComponentPropsWithoutRef<"div"> & {
-  location?: string;
-  backButton?: true;
-}) => {
+const FeedbackForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      location: location ?? "",
+      location: "",
     },
   });
 
@@ -36,7 +29,7 @@ const Search = ({
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
 
-    router.push(`/search?location=${values.location}`);
+    // router.push(`/search?location=${values.location}`);
   };
 
   return (
@@ -48,12 +41,6 @@ const Search = ({
           method="POST"
           action="/search"
         >
-          {backButton && (
-            <Button variant="outline" size="icon" onClick={router.back}>
-              <ArrowLeftIcon className="h-6 w-6" />
-              <span className="sr-only">Back</span>
-            </Button>
-          )}
           <FormField
             control={form.control}
             name="location"
@@ -72,7 +59,7 @@ const Search = ({
             size="icon"
             disabled={!form.formState.isValid}
           >
-            <MagnifyingGlassIcon className="h-6 w-6" />
+            <MagnifyingGlassIcon className="h-[1.2rem] w-[1.2rem]" />
             <span className="sr-only">Search</span>
           </Button>
         </form>
@@ -81,4 +68,4 @@ const Search = ({
   );
 };
 
-export { Search };
+export { FeedbackForm };

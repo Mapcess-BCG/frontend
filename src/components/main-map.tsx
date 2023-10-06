@@ -1,19 +1,26 @@
 "use client";
 
-import "mapbox-gl/dist/mapbox-gl.css";
 import * as React from "react";
 import Map, {
   GeolocateControl,
-  Layer,
   NavigationControl,
-  Source,
+  useControl,
 } from "react-map-gl";
+import { MapboxOverlay, MapboxOverlayProps } from "@deck.gl/mapbox/typed";
 import { useTheme } from "next-themes";
-import { IconLayer, PathLayer, TextLayer } from "@deck.gl/layers/typed";
-import { DeckGL } from "@deck.gl/react/typed";
+import { IconLayer, PathLayer } from "@deck.gl/layers/typed";
+
+import "mapbox-gl/dist/mapbox-gl.css";
+import { cn } from "@/lib/utils";
 
 const ICON_MAPPING = {
   marker: { x: 0, y: 0, width: 128, height: 128, mask: true },
+};
+
+const DeckGLOverlay = (props: MapboxOverlayProps) => {
+  const overlay = useControl<MapboxOverlay>(() => new MapboxOverlay(props));
+  overlay.setProps(props);
+  return null;
 };
 
 const MainMap = React.forwardRef<
@@ -29,7 +36,7 @@ const MainMap = React.forwardRef<
       lng: number;
     };
   }
->(({ startLocation, endLocation, paths, ...props }, ref) => {
+>(({ startLocation, endLocation, paths, className, ...props }, ref) => {
   const { resolvedTheme } = useTheme();
 
   const pathLayer = new PathLayer({
@@ -69,35 +76,34 @@ const MainMap = React.forwardRef<
   const layers = [pathLayer, iconLayer];
 
   return (
-    <div {...props} ref={ref}>
-      <DeckGL
-        layers={layers}
+    <div
+      {...props}
+      ref={ref}
+      className={cn("absolute inset-0 h-full w-full", className)}
+    >
+      <Map
+        reuseMaps={true}
+        attributionControl={false}
         initialViewState={{
           latitude: startLocation ? startLocation.lat : 51.233334,
           longitude: startLocation ? startLocation.lng : 6.783333,
           zoom: 10,
-          minZoom: 5,
-          maxZoom: 15,
-          pitch: 40.5,
-          bearing: -27.396674584323023,
         }}
-        controller
+        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
+        mapStyle={
+          resolvedTheme === "dark"
+            ? "mapbox://styles/mapbox/dark-v11"
+            : "mapbox://styles/mapbox/light-v11"
+        }
       >
-        <Map
-          mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN}
-          mapStyle={
-            resolvedTheme === "dark"
-              ? "mapbox://styles/mapbox/dark-v11"
-              : "mapbox://styles/mapbox/light-v11"
-          }
-        >
-          <GeolocateControl
-            positionOptions={{ enableHighAccuracy: true }}
-            trackUserLocation={true}
-          />
-          <NavigationControl position="bottom-left" />
-        </Map>
-      </DeckGL>
+        <DeckGLOverlay layers={layers} />
+        <GeolocateControl
+          positionOptions={{ enableHighAccuracy: true }}
+          trackUserLocation={true}
+          position="bottom-left"
+        />
+        <NavigationControl position="bottom-left" />
+      </Map>
     </div>
   );
 });

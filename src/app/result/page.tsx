@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { Search } from "@/components/search-form";
 import { cn } from "@/lib/utils";
 import { AccessibilityIcon, StarIcon } from "lucide-react";
@@ -28,8 +27,8 @@ export default async function SearchResults({
   }
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-between px-8 py-24">
-      <Search className="fixed top-4 z-10" location={location} backButton />
+    <main className="container flex min-h-screen flex-col items-center gap-4 p-4">
+      <Search className="z-10" location={location} backButton />
       <div className="relative z-10 flex w-full gap-2 rounded-md border bg-background/80 p-4 ring ring-muted-foreground">
         {result?.accessibilityScore === highestScore && (
           <div className="absolute -right-2 -top-2 flex h-fit w-fit items-center justify-center rounded-full bg-muted p-2">
@@ -69,7 +68,6 @@ export default async function SearchResults({
           ),
         )}
       />
-      <ModeToggle className="fixed bottom-12 right-4 z-10" />
     </main>
   );
 }

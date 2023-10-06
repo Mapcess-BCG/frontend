@@ -2,10 +2,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ModeToggle } from "@/components/mode-toggle";
 
 const inter = Inter({ subsets: ["latin"] });
-
-// export const runtime = "edge";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -41,7 +40,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <div className="relative min-h-screen w-screen">
+            {children}
+            <ModeToggle className="fixed bottom-4 right-4 z-10" />
+          </div>
         </ThemeProvider>
       </body>
     </html>
