@@ -1,6 +1,7 @@
-import { MainMap } from "@/components/main-map";
 import { ModeToggle } from "@/components/mode-toggle";
-import { Search } from "@/components/search";
+import { Search } from "@/components/search-form";
+import dynamic from "next/dynamic";
+const MainMap = dynamic(() => import("@/components/main-map"), { ssr: false });
 
 export default function Home() {
   return (

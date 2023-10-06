@@ -20,7 +20,7 @@ const Search = ({
   location,
   backButton,
   ...props
-}: React.ComponentPropsWithoutRef<"search"> & {
+}: React.ComponentPropsWithoutRef<"div"> & {
   location?: string;
   backButton?: true;
 }) => {
@@ -40,7 +40,7 @@ const Search = ({
   };
 
   return (
-    <search {...props}>
+    <div {...props}>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -77,7 +77,7 @@ const Search = ({
           </Button>
         </form>
       </Form>
-    </search>
+    </div>
   );
 };
 
