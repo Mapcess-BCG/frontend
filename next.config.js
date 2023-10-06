@@ -30,14 +30,19 @@ const generateAppDirEntry = (entry) => {
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack:
-    !isDev &&
-    ((config) => {
+  webpack: (config) => {
+    if (!isDev) {
       const entry = generateAppDirEntry(config.entry);
       config.entry = () => entry;
+    }
 
-      return config;
-    }),
+    config.module = {
+      ...config.module,
+      exprContextCritical: false,
+    };
+
+    return config;
+  },
 };
 
 module.exports = withPWA(nextConfig);

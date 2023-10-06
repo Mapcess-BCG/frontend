@@ -21,7 +21,7 @@ const formSchema = z.object({
   }),
 });
 
-const Search = () => {
+const Search = (props: React.ComponentPropsWithoutRef<"search">) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -34,7 +34,7 @@ const Search = () => {
   };
 
   return (
-    <search>
+    <search {...props}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
