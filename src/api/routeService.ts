@@ -27,7 +27,7 @@ export const getRoutes = async (from: string, to: string) => {
 
     return {
       ...route,
-      accessibilityScore: (random * 5).toFixed(2),
+      accessibilityScore: parseFloat((random * 5).toFixed(2)),
       id: randomUUID(),
       timeMinutes: (0.1 * route.polyline.flat().length).toFixed(2),
       wheelchairAccessible: random > 0.3,
