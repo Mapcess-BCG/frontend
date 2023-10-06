@@ -43,6 +43,14 @@ const nextConfig = {
 
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "obs-images-bcg.s3.eu-central-1.amazonaws.com",
+      },
+    ],
+  },
 };
 
 module.exports = withPWA(nextConfig);

@@ -71,6 +71,7 @@ export default async function SearchResults({
         startLocation={result.polyline?.at(0)!.at(0)!}
         endLocation={result?.polyline?.at(-1)!.at(-1)!}
         polyline={result?.polyline}
+        obstacles={result?.obstacles}
       />
 
       <Button asChild variant="outline" className="z-10">
