@@ -1,7 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { AccessibilityIcon, StarIcon } from "lucide-react";
 import { FeedbackForm } from "@/components/feedback-form";
 
 export default async function SearchResults({

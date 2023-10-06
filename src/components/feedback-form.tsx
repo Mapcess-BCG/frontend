@@ -20,11 +20,12 @@ import {
   MagnifyingGlassIcon,
   StarFilledIcon,
 } from "@radix-ui/react-icons";
-import { useRouter } from "next/navigation";
 import { Label } from "./ui/label";
 import { MountainIcon, StarIcon, TriangleRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
+import { useRouter } from "next/navigation";
+import { toast } from "./ui/use-toast";
 
 const formSchema = z.object({
   rating: z.coerce
@@ -47,12 +48,18 @@ const FeedbackForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
     },
   });
 
+  const router = useRouter();
+
   // const router = useRouter();
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
     console.log(values);
 
-    // router.push(`/search?location=${values.location}`);
+    toast({
+      title: "Feedback submitted",
+    });
+
+    router.push("/");
   };
 
   return (
