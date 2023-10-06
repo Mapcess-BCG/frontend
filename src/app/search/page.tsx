@@ -7,15 +7,15 @@ import dynamic from "next/dynamic";
 const MainMap = dynamic(() => import("@/components/main-map"), { ssr: false });
 
 export default async function SearchResults({
-  searchParams: { location, currentLng, currentLat },
+  searchParams: { location, origin },
 }: {
-  searchParams: { location?: string; currentLng?: string; currentLat?: string };
+  searchParams: { location?: string; origin?: string };
 }) {
-  if (!location || !currentLng || !currentLat) {
+  if (!location || !origin) {
     return null;
   }
 
-  const results = await getRoutes(`${currentLat},${currentLng}`, location);
+  const results = await getRoutes(origin, location);
   const highestScore = Math.max(
     ...results.map((result) => result.accessibilityScore),
   );
@@ -28,7 +28,7 @@ export default async function SearchResults({
           <li key={result.id}>
             <Link
               className="relative flex gap-2 rounded-md border bg-background/80 p-4"
-              href={`/result?location=${location}&id=${result.id}&currentLng=${currentLng}&currentLat=${currentLat}`}
+              href={`/result?location=${location}&id=${result.id}&origin=${origin}`}
             >
               {result.accessibilityScore === highestScore && (
                 <div className="absolute -right-2 -top-2 flex h-fit w-fit items-center justify-center rounded-full bg-muted p-2">

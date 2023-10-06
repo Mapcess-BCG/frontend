@@ -9,6 +9,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { ArrowLeftIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 function getPosition(options?: PositionOptions): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) =>
@@ -17,6 +18,12 @@ function getPosition(options?: PositionOptions): Promise<GeolocationPosition> {
 }
 
 const formSchema = z.object({
+  origin: z
+    .string()
+    .min(2, {
+      message: "Origin must be at least 2 characters long",
+    })
+    .optional(),
   location: z.string().min(2, {
     message: "Location must be at least 2 characters long",
   }),
@@ -24,16 +31,19 @@ const formSchema = z.object({
 
 const Search = ({
   location,
+  origin,
   backButton,
   ...props
 }: React.ComponentPropsWithoutRef<"div"> & {
   location?: string;
   backButton?: true;
+  origin?: string;
 }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       location: location ?? "",
+      origin: origin ?? "",
     },
   });
 
@@ -42,12 +52,18 @@ const Search = ({
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
 
-    const position = await getPosition();
-    const { latitude, longitude } = position.coords;
+    if (values.origin) {
+      router.push(
+        `/search?origin=${values.origin}&location=${values.location}`,
+      );
+    } else {
+      const position = await getPosition();
+      const { latitude, longitude } = position.coords;
 
-    router.push(
-      `/search?currentLng=${longitude}&currentLat=${latitude}&location=${values.location}`,
-    );
+      router.push(
+        `/search?origin=${latitude},${longitude}&location=${values.location}`,
+      );
+    }
   };
 
   return (
@@ -65,18 +81,43 @@ const Search = ({
               <span className="sr-only">Back</span>
             </Button>
           )}
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormControl>
-                  <Input placeholder="Dusseldorf" {...field} />
-                </FormControl>
-                {/* <FormMessage /> */}
-              </FormItem>
-            )}
-          />
+          <div className="flex flex-col gap-2">
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input placeholder="Where to" {...field} />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="origin"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      placeholder="Current location"
+                      disabled={
+                        !form.formState.touchedFields.location && !location
+                      }
+                      className={cn(
+                        !form.formState.touchedFields.location &&
+                          !location &&
+                          "sr-only",
+                      )}
+                      {...field}
+                    />
+                  </FormControl>
+                  {/* <FormMessage /> */}
+                </FormItem>
+              )}
+            />
+          </div>
           <Button
             type="submit"
             variant="outline"

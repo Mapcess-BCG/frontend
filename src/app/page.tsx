@@ -1,4 +1,3 @@
-import { ModeToggle } from "@/components/mode-toggle";
 import { Search } from "@/components/search-form";
 import dynamic from "next/dynamic";
 const MainMap = dynamic(() => import("@/components/main-map"), { ssr: false });
