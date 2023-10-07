@@ -25,7 +25,7 @@ export default async function SearchResults({
       <Search className="z-10" location={location} backButton origin={origin} />
       <ul className="container z-10 max-w-md space-y-6">
         {results
-          ?.toSorted(
+          ?.sort(
             (resA, resB) => resB.accessibilityScore - resA.accessibilityScore,
           )
           ?.map((result) => (

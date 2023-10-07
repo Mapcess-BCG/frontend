@@ -28,9 +28,7 @@ export default async function SearchResults({
   const result =
     results?.length &&
     results
-      .toSorted(
-        (resA, resB) => resB.accessibilityScore - resA.accessibilityScore,
-      )
+      .sort((resA, resB) => resB.accessibilityScore - resA.accessibilityScore)
       .at(0)!;
 
   if (!result) {
