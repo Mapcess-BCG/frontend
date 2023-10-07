@@ -15,12 +15,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import {
-  ArrowLeftIcon,
-  MagnifyingGlassIcon,
-  StarFilledIcon,
-} from "@radix-ui/react-icons";
-import { Label } from "./ui/label";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 import { MountainIcon, StarIcon, TriangleRightIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Separator } from "./ui/separator";
@@ -57,11 +52,11 @@ const FeedbackForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
 
-    await fetch(API_URL, { 
-      method: 'POST', 
-      mode: 'cors', 
-      body: JSON.stringify(values) 
-    })
+    await fetch(API_URL, {
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify(values),
+    });
 
     toast({
       title: "Feedback submitted",

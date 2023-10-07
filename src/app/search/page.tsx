@@ -62,6 +62,8 @@ export default async function SearchResults({
           results?.length ? results[0]?.polyline?.[0]?.[0] : undefined
         }
         polyline={results.flatMap((result) => result.polyline)}
+        feedback={results.flatMap((result) => result.feedback)}
+        obstacles={results.flatMap((result) => result.obstacles)}
       />
     </main>
   );

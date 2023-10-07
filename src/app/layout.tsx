@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { FlagIcon } from "lucide-react";
+import { MapProvider } from "@/components/map-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,21 +45,23 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative min-h-screen w-screen">
-            {children}
-            <ModeToggle className="fixed bottom-4 right-4 z-10" />
-            <Button
-              className="fixed bottom-16 right-4 z-10"
-              variant="outline"
-              size="icon"
-              asChild
-            >
-              <Link href="/report?location=BCG">
-                <FlagIcon className="h-6 w-6" />
-              </Link>
-            </Button>
-          </div>
-          <Toaster />
+          <MapProvider>
+            <div className="relative min-h-screen w-screen">
+              {children}
+              <ModeToggle className="fixed bottom-4 right-4 z-10" />
+              <Button
+                className="fixed bottom-16 right-4 z-10"
+                variant="outline"
+                size="icon"
+                asChild
+              >
+                <Link href="/report?location=BCG">
+                  <FlagIcon className="h-6 w-6" />
+                </Link>
+              </Button>
+            </div>
+            <Toaster />
+          </MapProvider>
         </ThemeProvider>
       </body>
     </html>

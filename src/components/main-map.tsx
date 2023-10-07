@@ -14,9 +14,15 @@ import { IconLayer, PathLayer } from "@deck.gl/layers/typed";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./mapbox.css";
 import { cn } from "@/lib/utils";
-import { Obstacle, Polyline } from "@/api/routeService";
+import { Feedback, Obstacle, Polyline } from "@/api/routeService";
 import Image from "next/image";
-import { CircleIcon, ConstructionIcon, LucideProps } from "lucide-react";
+import {
+  AlertOctagonIcon,
+  CircleIcon,
+  ConstructionIcon,
+  LucideProps,
+} from "lucide-react";
+import { uniqBy } from "lodash";
 
 const ICON_MAPPING = {
   marker: { x: 0, y: 0, width: 128, height: 128, mask: true },
@@ -50,21 +56,36 @@ const MainMap = React.forwardRef<
     startLocation?: [number, number];
     endLocation?: [number, number];
     obstacles?: Obstacle[];
+    feedback?: Feedback[];
   }
 >(
   (
-    { startLocation, endLocation, polyline, obstacles, className, ...props },
+    {
+      startLocation,
+      endLocation,
+      polyline,
+      obstacles,
+      feedback,
+      className,
+      ...props
+    },
     ref,
   ) => {
     const { resolvedTheme } = useTheme();
 
-    const pathLayers = polyline?.map(
+    const pathLayers = uniqBy(
+      polyline?.map((segment) => ({
+        id: segment.map((coord) => coord.toReversed()).join(","),
+        data: segment,
+      })),
+      (segment) => segment.id,
+    ).map(
       (segment) =>
         new PathLayer({
-          id: segment.map((coord) => coord.toReversed()).join(","),
+          id: segment.id,
           data: [
             {
-              path: segment.map((coord) => coord.toReversed()),
+              path: segment.data.map((coord) => coord.toReversed()),
               name: "path",
               color: [20, 20, 200],
             },
@@ -118,27 +139,48 @@ const MainMap = React.forwardRef<
               : "mapbox://styles/mapbox/light-v11"
           }
         >
-          <DeckGLOverlay layers={layers} />
-          {obstacles?.map((obstacle) => (
-            <Marker
-              key={obstacle.id}
-              longitude={parseFloat(obstacle.obs_coordinate_long)}
-              latitude={parseFloat(obstacle.obs_coordinate_lat)}
-            >
-              <div className="rounded border-muted-foreground bg-muted p-2">
-                <div className="flex items-center gap-2">
-                  {getObstacleIcon(obstacle.obs_type)}
-                  <span className="text-lg">{obstacle.obs_comment}</span>
+          <DeckGLOverlay interleaved layers={layers} />
+          {obstacles &&
+            uniqBy(obstacles, (x) => x.id)?.map((obstacle) => (
+              <Marker
+                key={`obstacle-${obstacle.id}`}
+                longitude={parseFloat(obstacle.obs_coordinate_long)}
+                latitude={parseFloat(obstacle.obs_coordinate_lat)}
+                anchor="bottom"
+              >
+                <div className="flex flex-col gap-4 rounded border-muted-foreground bg-muted p-4">
+                  <div className="flex items-center gap-2">
+                    {getObstacleIcon(obstacle.obs_type)}
+                    <span className="text-xl">{obstacle.obs_comment}</span>
+                  </div>
+                  <img
+                    src={obstacle.img_url}
+                    alt={obstacle.obs_comment}
+                    width={320}
+                    height={320}
+                  />
                 </div>
-                <img
-                  src={obstacle.img_url}
-                  alt={obstacle.obs_comment}
-                  width={32}
-                  height={32}
-                />
-              </div>
-            </Marker>
-          ))}
+              </Marker>
+            ))}
+          {feedback &&
+            uniqBy(feedback, (x) => x.id).map((feedback) => (
+              <Marker
+                key={`feedback-${feedback.id}`}
+                longitude={parseFloat(feedback.feed_coordinate_long)}
+                latitude={parseFloat(feedback.feed_coordinate_lat)}
+                anchor="bottom"
+              >
+                <div className="flex flex-col gap-1 rounded border-muted-foreground bg-muted p-4">
+                  <span className="flex items-center gap-1 text-xl">
+                    <AlertOctagonIcon className="h-6 w-6" />
+                    <span className="capitalize">{feedback.feed_comment}</span>
+                  </span>
+                  <span className="text-lg text-muted-foreground">
+                    Score {feedback.feed_score}
+                  </span>
+                </div>
+              </Marker>
+            ))}
           <GeolocateControl
             positionOptions={{ enableHighAccuracy: true }}
             trackUserLocation={true}
