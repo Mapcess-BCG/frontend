@@ -69,14 +69,13 @@ export const getRoutes = async (from: string, to: string) => {
   console.log(result);
 
   return result.map((route) => {
-    const random = Math.random();
-
+    const score = parseFloat(route.score.toFixed(2));
     return {
       ...route,
-      accessibilityScore: parseFloat(route.score.toFixed(2)),
+      accessibilityScore: score,
       id: randomUUID(),
       timeMinutes: (0.1 * route.polyline.flat().length).toFixed(2),
-      wheelchairAccessible: random > 0.3,
+      wheelchairAccessible: score >= 2.8,
     };
   });
 };

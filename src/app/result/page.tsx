@@ -25,7 +25,13 @@ export default async function SearchResults({
     ...results.map((result) => result.accessibilityScore),
   );
   // const result = results?.length && results.find((result) => result.id === id)!;
-  const result = results?.length && results[0]!;
+  const result =
+    results?.length &&
+    results
+      .toSorted(
+        (resA, resB) => resB.accessibilityScore - resA.accessibilityScore,
+      )
+      .at(0)!;
 
   if (!result) {
     return null;
