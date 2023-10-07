@@ -16,9 +16,25 @@ import "./mapbox.css";
 import { cn } from "@/lib/utils";
 import { Obstacle, Polyline } from "@/api/routeService";
 import Image from "next/image";
+import { CircleIcon, ConstructionIcon, LucideProps } from "lucide-react";
 
 const ICON_MAPPING = {
   marker: { x: 0, y: 0, width: 128, height: 128, mask: true },
+};
+
+type ObstacleType = Obstacle["obs_type"];
+
+const obstacleIcons: Record<
+  ObstacleType,
+  React.ForwardRefExoticComponent<LucideProps>
+> = {
+  construction: ConstructionIcon,
+  rock: CircleIcon,
+};
+
+const getObstacleIcon = (type: ObstacleType) => {
+  const Icon = obstacleIcons[type];
+  return <Icon className="h-6 w-6" />;
 };
 
 const DeckGLOverlay = (props: MapboxOverlayProps) => {
@@ -110,7 +126,10 @@ const MainMap = React.forwardRef<
               latitude={parseFloat(obstacle.obs_coordinate_lat)}
             >
               <div className="rounded border-muted-foreground bg-muted p-2">
-                <span className="text-lg">{obstacle.obs_comment}</span>
+                <div className="flex items-center gap-2">
+                  {getObstacleIcon(obstacle.obs_type)}
+                  <span className="text-lg">{obstacle.obs_comment}</span>
+                </div>
                 <img
                   src={obstacle.img_url}
                   alt={obstacle.obs_comment}
