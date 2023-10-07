@@ -111,7 +111,7 @@ const MainMap = React.forwardRef<
             >
               <div className="rounded border-muted-foreground bg-muted p-2">
                 <span className="text-lg">{obstacle.obs_comment}</span>
-                <Image
+                <img
                   src={obstacle.img_url}
                   alt={obstacle.obs_comment}
                   width={32}
