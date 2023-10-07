@@ -25,10 +25,10 @@ export default async function SearchResults({
       <Search className="z-10" location={location} backButton origin={origin} />
       <ul className="container z-10 max-w-md space-y-6">
         {results
-          .toSorted(
+          ?.toSorted(
             (resA, resB) => resB.accessibilityScore - resA.accessibilityScore,
           )
-          .map((result) => (
+          ?.map((result) => (
             <li key={result.id}>
               <Link
                 className="relative flex gap-2 rounded-md border bg-background/80 p-4"
