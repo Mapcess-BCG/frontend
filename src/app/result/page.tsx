@@ -40,7 +40,7 @@ export default async function SearchResults({
           backButton
           origin={origin}
         />
-        <div className="relative z-10 flex w-full gap-2 rounded-md border bg-background/80 p-4 ring ring-muted-foreground">
+        <div className="relative z-10 flex w-full max-w-md gap-2 rounded-md border bg-background/80 p-4 ring ring-muted-foreground">
           {result?.accessibilityScore === highestScore && (
             <div className="absolute -right-2 -top-2 flex h-fit w-fit items-center justify-center rounded-full bg-muted p-2">
               <StarIcon className="h-6 w-6  text-yellow-500" />

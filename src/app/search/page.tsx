@@ -22,8 +22,8 @@ export default async function SearchResults({
 
   return (
     <main className="container flex min-h-screen w-full flex-col items-center gap-4 p-4">
-      <Search className="z-10" location={location} backButton />
-      <ul className="z-10 w-full space-y-6">
+      <Search className="z-10" location={location} backButton origin={origin} />
+      <ul className="container z-10 max-w-md space-y-6">
         {results.map((result) => (
           <li key={result.id}>
             <Link

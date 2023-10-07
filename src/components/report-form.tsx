@@ -17,10 +17,12 @@ import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Textarea } from "./ui/textarea";
+import { Input } from "./ui/input";
 
 const formSchema = z.object({
   kind: z.enum(["rock", "incline", "obstacle"]),
   description: z.string().optional(),
+  image: z.string(),
 });
 
 const ReportForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
@@ -107,7 +109,19 @@ const ReportForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
             </FormItem>
           )}
         />
-
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Image</FormLabel>
+              <FormControl>
+                <Input type="file" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button type="submit" disabled={!form.formState.isValid}>
           <span>Submit</span>
         </Button>
