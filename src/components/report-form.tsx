@@ -22,7 +22,7 @@ import { Input } from "./ui/input";
 const formSchema = z.object({
   kind: z.enum(["rock", "incline", "obstacle"]),
   description: z.string().optional(),
-  image: z.string(),
+  image: z.string().optional(),
 });
 
 const ReportForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
@@ -31,6 +31,7 @@ const ReportForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
     defaultValues: {
       kind: "rock",
       description: "",
+      image: "",
     },
   });
 
@@ -43,7 +44,7 @@ const ReportForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
       title: "Feedback submitted",
     });
 
-    router.push("/");
+    router.back();
   };
 
   return (

@@ -55,7 +55,7 @@ export default function RootLayout({
                 size="icon"
                 asChild
               >
-                <Link href="/report?location=BCG">
+                <Link href="/report?location=Currywurst">
                   <FlagIcon className="h-6 w-6" />
                 </Link>
               </Button>
