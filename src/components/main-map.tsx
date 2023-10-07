@@ -148,16 +148,16 @@ const MainMap = React.forwardRef<
                 latitude={parseFloat(obstacle.obs_coordinate_lat)}
                 anchor="bottom"
               >
-                <div className="flex flex-col gap-4 rounded border-muted-foreground bg-muted p-4">
+                <div className="flex flex-col gap-4 rounded border-muted-foreground bg-muted p-2">
                   <div className="flex items-center gap-2">
                     {getObstacleIcon(obstacle.obs_type)}
-                    <span className="text-xl">{obstacle.obs_comment}</span>
+                    <span className="text-lg">{obstacle.obs_comment}</span>
                   </div>
                   <img
                     src={obstacle.img_url}
                     alt={obstacle.obs_comment}
-                    width={320}
-                    height={320}
+                    width={160}
+                    height={160}
                   />
                 </div>
               </Marker>
@@ -170,12 +170,12 @@ const MainMap = React.forwardRef<
                 latitude={parseFloat(feedback.feed_coordinate_lat)}
                 anchor="bottom"
               >
-                <div className="flex flex-col gap-1 rounded border-muted-foreground bg-muted p-4">
-                  <span className="flex items-center gap-1 text-xl">
+                <div className="flex flex-col gap-1 rounded border-muted-foreground bg-muted p-2">
+                  <span className="flex items-center gap-1 text-lg">
                     <AlertOctagonIcon className="h-6 w-6" />
                     <span className="capitalize">{feedback.feed_comment}</span>
                   </span>
-                  <span className="text-lg text-muted-foreground">
+                  <span className="text-muted-foreground">
                     Score {feedback.feed_score}
                   </span>
                 </div>
