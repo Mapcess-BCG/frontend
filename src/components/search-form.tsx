@@ -10,6 +10,7 @@ import { Button } from "./ui/button";
 import { ArrowLeftIcon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { BackButton } from "./back-button";
 
 function getPosition(options?: PositionOptions): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) =>
@@ -78,12 +79,7 @@ const Search = ({
           method="POST"
           action="/search"
         >
-          {backButton && (
-            <Button variant="outline" size="icon" onClick={router.back}>
-              <ArrowLeftIcon className="h-6 w-6" />
-              <span className="sr-only">Back</span>
-            </Button>
-          )}
+          {backButton && <BackButton />}
           <div className="flex flex-col gap-2">
             <FormField
               control={form.control}
