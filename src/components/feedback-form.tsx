@@ -27,6 +27,8 @@ import { Separator } from "./ui/separator";
 import { useRouter } from "next/navigation";
 import { toast } from "./ui/use-toast";
 
+const API_URL = "http://18.195.60.123/feedback";
+
 const formSchema = z.object({
   rating: z.coerce
     .number()
@@ -52,8 +54,14 @@ const FeedbackForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
 
   // const router = useRouter();
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
+
+    await fetch(API_URL, { 
+      method: 'POST', 
+      mode: 'cors', 
+      body: JSON.stringify(values) 
+    })
 
     toast({
       title: "Feedback submitted",
