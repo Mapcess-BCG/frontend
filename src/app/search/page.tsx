@@ -57,7 +57,12 @@ export default async function SearchResults({
           </li>
         ))}
       </ul>
-      <MainMap />
+      <MainMap
+        startLocation={
+          results?.length ? results[0]?.polyline?.[0]?.[0] : undefined
+        }
+        polyline={results.flatMap((result) => result.polyline)}
+      />
     </main>
   );
 }
