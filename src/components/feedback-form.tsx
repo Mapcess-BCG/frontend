@@ -52,11 +52,11 @@ const FeedbackForm = ({ ...props }: React.ComponentPropsWithoutRef<"div">) => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     console.log(values);
 
-    await fetch(API_URL, {
+    /* await fetch(API_URL, {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(values),
-    });
+    }); */
 
     toast({
       title: "Feedback submitted",
