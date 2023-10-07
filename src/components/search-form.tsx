@@ -18,16 +18,19 @@ function getPosition(options?: PositionOptions): Promise<GeolocationPosition> {
 }
 
 const formSchema = z.object({
-  origin: z
-    .string()
-    .min(2, {
-      message: "Origin must be at least 2 characters long",
-    })
-    .optional(),
+  origin: z.string().optional(),
   location: z.string().min(2, {
     message: "Location must be at least 2 characters long",
   }),
 });
+
+const isLatLng = (str?: string) => {
+  if (!str) return false;
+
+  const [lat, lng] = str.split(",");
+
+  return !isNaN(Number(lat)) && !isNaN(Number(lng));
+};
 
 const Search = ({
   location,
@@ -43,7 +46,7 @@ const Search = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       location: location ?? "",
-      origin: origin ?? "",
+      origin: !isLatLng(origin) ? origin : "",
     },
   });
 
